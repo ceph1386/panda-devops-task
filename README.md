@@ -5,7 +5,7 @@ Production-grade automated CI/CD pipeline and containerized web application depl
 
 Repository Structure
 --------------------
-
+```text
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml      # Automated CI/CD pipeline
@@ -15,7 +15,7 @@ Repository Structure
 ├── nginx.conf              # Production Nginx server config
 ├── docker-compose.yml      # Local orchestration manifest
 └── deploy.sh               # Local deployment automation
-
+```
 Quick Start (Local Deployment)
 ------------------------------
 
