@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Demo App | Panda Team</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --border: #334155;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.75rem;
+        }
+        p {
+            color: var(--text-muted);
+            margin: 0 0 1.5rem 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .status-box {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">● System Online</div>
+        <h1>Hello, Panda Team! 🐼</h1>
+        <p>Automated CI/CD Delivery Pipeline is operational. The container is running smoothly behind an Nginx web server.</p>
+        <div class="status-box">
+            <div>&gt; Environment: Production (Docker)</div>
+            <div>&gt; Web Server: Nginx (Alpine)</div>
+            <div>&gt; CI/CD: Automated via GitHub Actions</div>
+            <div>&gt; Status: 200 OK</div>
+        </div>
+        <div class="footer">
+            Developed by Vadym Shchuryk
+        </div>
+    </div>
+</body>
+</html>

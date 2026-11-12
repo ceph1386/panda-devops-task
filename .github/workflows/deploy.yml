@@ -1,0 +1,92 @@
+name: CI/CD Pipeline - Build, Test & Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ceph1386/panda-devops-app
+
+jobs:
+  # -----------------------------------------------------------
+  # 1. CI: Збирання, тестування та публікація в реєстр (Docker Hub)
+  # -----------------------------------------------------------
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # -----------------------------------------------------------
+  # 2. CD: Автоматичне розгортання та перевірка працездатності
+  # -----------------------------------------------------------
+  deploy-and-verify:
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Pull and verify image from Docker Hub
+        run: |
+          echo "Pulling latest image: ${{ env.IMAGE_NAME }}:latest"
+          docker pull ${{ env.IMAGE_NAME }}:latest
+
+      - name: Run containerized smoke test
+        run: |
+          echo "Spinning up staging verification container..."
+          docker run -d --name smoke-test -p 8080:80 ${{ env.IMAGE_NAME }}:latest
+          
+          # Очікуємо ініціалізацію вебсервера
+          sleep 3
+          
+          echo "Executing automated healthcheck endpoint..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            echo "✓ Healthcheck PASSED: 200 OK"
+          else
+            echo "✗ Healthcheck FAILED with status: $STATUS"
+            docker logs smoke-test
+            exit 1
+          fi
+          
+          # Зачищаємо тестовий контейнер
+          docker rm -f smoke-test
+
+      - name: Trigger Live Cloud Deployment Webhook (Optional)
+        run: |
+          echo "Pipeline verified. Ready for automatic cloud rollout."
