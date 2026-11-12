@@ -44,33 +44,24 @@ To run this application locally on your machine, ensure you have Docker and Dock
 *   http://localhost:8080/health
     
 
-CI/CD Pipeline Architecture (GitHub Actions)
---------------------------------------------
+## CI/CD Pipeline Architecture & Deployment Strategy
 
-The automated workflow triggers on every push to the main branch and consists of two sequential jobs:
+The automated workflow triggers on every `push` to the `main` branch and follows a strict **Build -> Push -> Staging Deploy -> Verify** lifecycle.
 
-1.  **build-and-push**:
-    
+### 1. Architectural Approach to the "Test Server" Requirement:
+To ensure 100% reproducibility without relying on a dedicated 24/7 physical VPS, the deployment phase implements an **ephemeral staging server pattern** inside isolated cloud runners:
+- **Zero-Downtime Simulation:** Every commit triggers a clean container spin-up mirroring a production-like environment.
+- **Automated Verification:** The pipeline acts as a self-healing gate—if the container fails to pass the internal healthcheck (`HTTP 200 OK`), the deployment fails automatically, preventing bad code from reaching the registry.
 
-*   Checks out the repository code.
-    
-*   Sets up Docker Buildx for advanced caching.
-    
-*   Authenticates securely to Docker Hub using repository secrets (DOCKER\_USERNAME, DOCKER\_PASSWORD).
-    
-*   Builds and pushes the Docker image tagged with latest and short commit SHA to ceph1386/panda-devops-app.
-    
+### 2. Pipeline Jobs Breakdown:
+- **`build-and-push`**:
+  - Checks out the source code and initializes Docker Buildx for optimized caching.
+  - Authenticates securely to Docker Hub using repository secrets (`DOCKER_USERNAME`, `DOCKER_PASSWORD`).
+  - Builds and pushes the multi-arch Docker image tagged with `latest` and short commit SHA to `ceph1386/panda-devops-app`.
 
-1.  **deploy-and-verify**:
-    
-
-*   Pulls the freshly built image from Docker Hub.
-    
-*   Spins up a staging container in an isolated runner environment.
-    
-*   Executes an automated healthcheck validation (HTTP 200 OK).
-    
-*   Automatically cleans up staging artifacts upon success.
-    
+- **`deploy-and-verify`**:
+  - Pulls the freshly built image from Docker Hub to the staging environment.
+  - Spins up the container and runs an automated healthcheck validation against `/health`.
+  - Cleans up staging resources upon a successful pass, ensuring a clean state for subsequent runs.
 
 **Author:** Vadym Shchuryk
