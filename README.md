@@ -6,7 +6,15 @@ Production-grade automated CI/CD pipeline and containerized web application depl
 Repository Structure
 --------------------
 
-├── .github/│ └── workflows/│ └── deploy.yml # Automated GitHub Actions CI/CD pipeline├── html/│ └── index.html # Custom styled frontend application├── Dockerfile # Optimized Alpine Dockerfile with HEALTHCHECK├── nginx.conf # Secure production Nginx configuration├── docker-compose.yml # Local orchestration manifest└── deploy.sh # Local automation deployment script
+├── .github/
+│   └── workflows/
+│       └── deploy.yml      # Automated CI/CD pipeline
+├── html/
+│   └── index.html          # Web application frontend
+├── Dockerfile              # Optimized Alpine container definition
+├── nginx.conf              # Production Nginx server config
+├── docker-compose.yml      # Local orchestration manifest
+└── deploy.sh               # Local deployment automation
 
 Quick Start (Local Deployment)
 ------------------------------
