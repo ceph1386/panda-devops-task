@@ -21,20 +21,27 @@ Quick Start (Local Deployment)
 
 To run this application locally on your machine, ensure you have Docker and Docker Compose installed, then execute:
 
-1.  Clone the repository:git clone [https://github.com/ceph1386/panda-devops-task.git](https://www.google.com/url?sa=E&q=https://github.com/ceph1386/panda-devops-task.git)cd panda-devops-task
+1.  Clone the repository:
+  ```bash
+    git clone https://github.com/ceph1386/panda-devops-task.git
+    cd panda-devops-task
+  ```
     
-2.  Run the deployment via Docker Compose:docker compose up -d
+2.  Run the deployment via Docker Compose:
+   ```bash
+    docker compose up -d
+   ```
     
 3.  Open your browser and navigate to:
     
 
-*   [http://localhost:8080](https://www.google.com/url?sa=E&q=http://localhost:8080)
+*   http://localhost:8080
     
 
-1.  Check the application health endpoint:
+4.  Check the application health endpoint:
     
 
-*   [http://localhost:8080/health](https://www.google.com/url?sa=E&q=http://localhost:8080/health)
+*   http://localhost:8080/health
     
 
 CI/CD Pipeline Architecture (GitHub Actions)
